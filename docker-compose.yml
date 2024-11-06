@@ -1,0 +1,62 @@
+name: spot-gabriel-s
+
+services:
+  db:
+    container_name: database
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - db-data:/var/lib/postgresql/data:rw
+    networks:
+      - internal_observability
+    ports:
+      - "5432:5432"
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    restart: always
+    # bind the file in a readonly way (zero trust)
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - internal_observability
+    # this is purposefuly comented. I 'could' expose the network,
+    # but I won't for security reasons
+    # ports:
+    #   - "9090:9090"
+    expose:
+      - 9090
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    depends_on:
+      - db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: always
+    volumes:
+      - grafana-data:/var/lib/grafana:rw
+      - ./docker/grafana/provisioning/:/etc/grafana/provisioning/:ro
+    networks:
+      - internal_observability
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin # strong passowrd xD
+    depends_on:
+      - db
+      - prometheus
+
+volumes:
+  db-data: {}
+  grafana-data: {}
+
+networks:
+  internal_api: {}
+  internal_observability: {}

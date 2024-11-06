@@ -1,0 +1,319 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Player API",
+    "version": "1.0.0",
+    "description": "An API for keeping track of Players and their respective abilities!",
+    "contact": {
+      "name": "Gabriel Saiago",
+      "email": "grsaiago@gmail.com"
+    }
+  },
+  "paths": {
+    "/player/": {
+      "post": {
+        "summary": "Create a new player",
+        "tags": ["Player"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlayerBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Player created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerWithAbility"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Retrieve a paginated list of players",
+        "tags": ["Player"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A paginated list of players",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlayerWithAbility"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/player/id/{playerId}": {
+      "get": {
+        "tags": ["Player"],
+        "summary": "Get player by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerWithAbility"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/player/name/{playerName}": {
+      "get": {
+        "tags": ["Player"],
+        "summary": "Get player by name",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playerName",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerWithAbility"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/player/nickname/{playerNickname}": {
+      "get": {
+        "tags": ["Player"],
+        "summary": "Get player by nickname",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playerNickname",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerWithAbility"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/player/abilities/history/{playerId}": {
+      "get": {
+        "tags": ["Player"],
+        "summary": "Get player ability history by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playerId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player ability history retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlayerWithAbility"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreatePlayerBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "strength": {
+            "type": "integer"
+          },
+          "speed": {
+            "type": "integer"
+          },
+          "nickname": {
+            "type": "string",
+            "nullable": true
+          },
+          "dribble": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "strength",
+          "speed"
+        ]
+      },
+      "PlayerWithAbility": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string",
+            "nullable": true
+          },
+          "strength": {
+            "type": "integer"
+          },
+          "speed": {
+            "type": "integer"
+          },
+          "dribble": {
+            "type": "integer",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastAbilityUpdate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "strength",
+          "speed",
+          "createdAt",
+          "updatedAt",
+          "lastAbilityUpdate"
+        ]
+      },
+      "PaginationParams": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "limit",
+          "offset"
+        ]
+      },
+      "PlayerId": {
+        "type": "object",
+        "properties": {
+          "playerId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "playerId"
+        ]
+      },
+      "GetPlayerByNameUrlParams": {
+        "type": "object",
+        "properties": {
+          "playerName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "playerName"
+        ]
+      },
+      "GetPlayerByNicknameUrlParams": {
+        "type": "object",
+        "properties": {
+          "playerNickname": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "playerNickname"
+        ]
+      }
+    }
+  }
+}

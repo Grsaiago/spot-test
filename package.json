@@ -1,0 +1,36 @@
+{
+  "name": "spot",
+  "version": "1.0.0",
+  "description": "Teste técnico do Gabriel Saiago para a vaga de estágio em backend na SPOT metrics",
+  "main": "index.js",
+  "scripts": {
+    "dev": "docker compose up -d && nodemon ./src/index.ts",
+    "db-open": "drizzle-kit studio",
+    "db-migrations-gen": "drizzle-kit generate",
+    "db-migrations-apply": "drizzle-kit migrate",
+    "db-migrate": "pnpm db-migrations-gen && docker compose up -d db && pnpm db-migrations-apply && docker compose down db",
+    "db-delete-all": "docker volume rm spot-db-data",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabriel saiago",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.8.6",
+    "@types/pg": "^8.11.10",
+    "drizzle-kit": "^0.27.1",
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "@matteodisabatino/express-prometheus-middleware": "^4.2.1",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.36.0",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "http-status-codes": "^2.3.0",
+    "morgan": "^1.10.0",
+    "pg": "^8.13.1",
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^3.23.8"
+  }
+}
