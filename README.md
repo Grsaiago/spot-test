@@ -11,6 +11,15 @@ and a layer of security with internal isolation of services and a Rate Limiting 
 
 ## Features
 
+### Database
+![SPOT_db](https://github.com/user-attachments/assets/0f8d229e-8706-4441-b1ed-8a91c839e103)
+
+Q: Why not make the Player have a pk to a PlayerAbility.
+A:
+Because it would create a one to one relationship, preventing us from having a time series like dataset.
+This way we have a one to many relationship, making it possible to, in the future, if we want to,
+have a history of a player's performance over time.
+
 ### Code Structure
 
 - TypeScript Strict Mode: Enforced with "noImplicitAny" set to true,
@@ -26,7 +35,7 @@ ensuring all required configurations are set correctly.
 that leverages Zod schemas to dynamically create middleware for different parts of the request,
 based on configuration.
 
-### API Features
+### API
 
 - Healthcheck Route: Provides a quick status check endpoint.
 
