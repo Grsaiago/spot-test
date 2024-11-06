@@ -1,4 +1,4 @@
-# Project Name
+# SPOT Metrics Technical Assignment
 
 A Node.js + Express API, built with a strong focus on
 strict typing, data validation, security, and observability.
