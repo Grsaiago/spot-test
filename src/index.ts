@@ -39,10 +39,8 @@ const promMiddleware = new ExpressPrometheusMiddleware({
 if (process.env.RATE_LIMIT == 'true') {
 	const limiter = rateLimit({
 		// How long to remember requests for, in milliseconds.
-		// TODO: Change this to zod validation
 		windowMs: appEnvs.rateLimitInterval,
 		// How many requests to allow.
-		// TODO: Change this to zod validation
 		limit: appEnvs.rateLimitCount,
 		// disable X-RateLimit-*
 		legacyHeaders: false,
@@ -51,7 +49,6 @@ if (process.env.RATE_LIMIT == 'true') {
 }
 app.use(promMiddleware.handler);
 app.use(express.json());
-//TODO: Checar se esse express.urlencoded precisa mesmo
 app.use(express.urlencoded({ extended: false }));
 // as per: (https://www.digitalocean.com/community/tutorials/nodejs-getting-started-morgan)
 app.use(morgan("combined"));
