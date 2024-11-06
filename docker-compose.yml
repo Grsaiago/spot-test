@@ -10,9 +10,28 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data:rw
     networks:
+      - internal_api
+    # uncomment this to be able to connect to the db
+    # ports:
+    #   - "5432:5432"
+    expose:
+      - 5432
+
+  app:
+    container_name: api
+    build:
+      context: .
+      dockerfile: ./docker/api/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - internal_api
       - internal_observability
     ports:
-      - "5432:5432"
+      - "8080:8080"
+    depends_on:
+      - db
 
   prometheus:
     container_name: prometheus
@@ -23,6 +42,7 @@ services:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - internal_observability
+      - internal_api
     # this is purposefuly comented. I 'could' expose the network,
     # but I won't for security reasons
     # ports:
@@ -31,10 +51,11 @@ services:
       - 9090
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
-    depends_on:
-      - db
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - db
+      - app
 
   grafana:
     container_name: grafana
@@ -51,6 +72,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin # strong passowrd xD
     depends_on:
       - db
+      - app
       - prometheus
 
 volumes:

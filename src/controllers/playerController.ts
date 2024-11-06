@@ -103,37 +103,43 @@ export class PlayerController {
 				eq(PlayerModel.id, req.params.playerId),
 				isNull(PlayerModel.deletedAt)
 			)).limit(1);
-			const habilitiesQuery: PlayerAbilitySelectModel[] = await db.select().from(PlayerAbilityModel).where(and(
-				eq(PlayerAbilityModel.referencePlayer, req.params.playerId),
-				isNull(PlayerAbilityModel.deletedAt)
-			)).orderBy(PlayerAbilityModel.createdAt).limit(1)
-
-			const foundPlayer: PlayerWithAbilitiy = {
-				id: playerQuery[0].id,
-				name: playerQuery[0].name,
-				nickname: playerQuery[0].nickname,
-				strength: habilitiesQuery[0].strength,
-				speed: habilitiesQuery[0].speed,
-				dribble: habilitiesQuery[0].speed,
-				createdAt: playerQuery[0].createdAt,
-				updatedAt: playerQuery[0].updatedAt,
-				lastAbilityUpdate: habilitiesQuery[0].createdAt
-			};
-			res.json(foundPlayer);
-		}
-		catch (err) {
-			if (err instanceof DrizzleError || err instanceof DatabaseError) {
+			if (playerQuery.length) {
 				res.status(StatusCodes.NOT_FOUND)
 					.json({
 						message: ReasonPhrases.NOT_FOUND
 					});
 			}
-			else {
-				res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+
+			const abilitiesQuery: PlayerAbilitySelectModel[] = await db.select().from(PlayerAbilityModel).where(and(
+				eq(PlayerAbilityModel.referencePlayer, req.params.playerId),
+				isNull(PlayerAbilityModel.deletedAt)
+			)).orderBy(PlayerAbilityModel.createdAt).limit(1)
+			if (abilitiesQuery.length) {
+				res.status(StatusCodes.NOT_FOUND)
 					.json({
-						message: ReasonPhrases.INTERNAL_SERVER_ERROR
+						message: ReasonPhrases.NOT_FOUND
 					});
 			}
+
+			const foundPlayer: PlayerWithAbilitiy = {
+				id: playerQuery[0].id,
+				name: playerQuery[0].name,
+				nickname: playerQuery[0].nickname,
+				strength: abilitiesQuery[0].strength,
+				speed: abilitiesQuery[0].speed,
+				dribble: abilitiesQuery[0].speed,
+				createdAt: playerQuery[0].createdAt,
+				updatedAt: playerQuery[0].updatedAt,
+				lastAbilityUpdate: abilitiesQuery[0].createdAt
+			};
+
+			res.json(foundPlayer);
+		}
+		catch (err) {
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({
+					message: ReasonPhrases.INTERNAL_SERVER_ERROR
+				});
 		}
 	}
 
@@ -151,22 +157,20 @@ export class PlayerController {
 				ilike(PlayerModel.name, `%${req.params.playerName}%`),
 				isNull(PlayerModel.deletedAt)
 			)).limit(req.query.limit).offset(req.query.offset);
-
-			res.json(players);
-		}
-		catch (err) {
-			if (err instanceof DrizzleError || err instanceof DatabaseError) {
+			if (players.length === 0) {
 				res.status(StatusCodes.NOT_FOUND)
 					.json({
 						message: ReasonPhrases.NOT_FOUND
 					});
 			}
-			else {
-				res.status(StatusCodes.INTERNAL_SERVER_ERROR)
-					.json({
-						message: ReasonPhrases.INTERNAL_SERVER_ERROR
-					});
-			}
+
+			res.json(players);
+		}
+		catch (err) {
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({
+					message: ReasonPhrases.INTERNAL_SERVER_ERROR
+				});
 		}
 	}
 
@@ -184,22 +188,20 @@ export class PlayerController {
 				ilike(PlayerModel.nickname, `%${req.params.playerNickname}%`),
 				isNull(PlayerModel.deletedAt)
 			)).limit(req.query.limit).offset(req.query.offset);
-
-			res.json(players);
-		}
-		catch (err) {
-			if (err instanceof DrizzleError || err instanceof DatabaseError) {
+			if (players.length === 0) {
 				res.status(StatusCodes.NOT_FOUND)
 					.json({
 						message: ReasonPhrases.NOT_FOUND
 					});
 			}
-			else {
-				res.status(StatusCodes.INTERNAL_SERVER_ERROR)
-					.json({
-						message: ReasonPhrases.INTERNAL_SERVER_ERROR
-					});
-			}
+
+			res.json(players);
+		}
+		catch (err) {
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({
+					message: ReasonPhrases.INTERNAL_SERVER_ERROR
+				});
 		}
 	}
 
@@ -214,20 +216,19 @@ export class PlayerController {
 				eq(PlayerModel.id, req.params.playerId),
 				isNotNull(PlayerAbilityModel.deletedAt)
 			))
-			res.json(stats);
-		} catch (err) {
-			if (err instanceof DrizzleError || err instanceof DatabaseError) {
+			if (stats.length === 0) {
 				res.status(StatusCodes.NOT_FOUND)
 					.json({
 						message: ReasonPhrases.NOT_FOUND
 					});
 			}
-			else {
-				res.status(StatusCodes.INTERNAL_SERVER_ERROR)
-					.json({
-						message: ReasonPhrases.INTERNAL_SERVER_ERROR
-					});
-			}
+
+			res.json(stats);
+		} catch (err) {
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({
+					message: ReasonPhrases.INTERNAL_SERVER_ERROR
+				});
 		}
 	}
 }

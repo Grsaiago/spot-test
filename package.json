@@ -18,12 +18,12 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.8.6",
     "@types/pg": "^8.11.10",
-    "drizzle-kit": "^0.27.1",
     "nodemon": "^3.1.7"
   },
   "dependencies": {
     "@matteodisabatino/express-prometheus-middleware": "^4.2.1",
     "dotenv": "^16.4.5",
+    "drizzle-kit": "^0.27.1",
     "drizzle-orm": "^0.36.0",
     "express": "^4.21.1",
     "express-rate-limit": "^7.4.1",
