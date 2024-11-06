@@ -5,10 +5,9 @@ strict typing, data validation, security, and observability.
 
 ## Project Overview
 
-This API is written in TypeScript with a strict configuration and designed to
-provide reliable services with enhanced observability and security measures.
-The system can generate a graph of player ability stats history for frontend use
-and includes API documentation with Swagger.
+This API is written in TypeScript with all strict typing turned on and documentation via Swagger-ui following OAS 3.0 specs.
+The API is designed to provide reliable services with enhanced observability with Prometheus and Grafana,
+and a layer of security with internal isolation of services and a Rate Limiting functionality on the API.
 
 ## Features
 
@@ -37,7 +36,7 @@ allowing for easy adjustments based on load requirements.
 - API Documentation: Integrated Swagger documentation provides an interactive and
 comprehensive reference for the API’s endpoints.
 
-- Player Ability Stats History: A feature enables the frontend to plot a graph of
+- Player Ability Stats History: This endpoint enables a future implementation of a graph of
 player ability stats history, offering a visual overview of stats changes over time.
 
 ### Architecture
@@ -58,6 +57,10 @@ docker-compose up.
 
 2. Ensure you have Docker installed.
 
-3. Set up the environment variables as specified in .env.example.
+3. Create a .env file following the  env.example (or just rename env.example as .env)
 
-4. Run docker-compose up to start all services, including Prometheus and Grafana.
+4. Run docker-compose up to start all services.
+
+5. Go to /api-docs to check out documentation.
+
+6. ping localhost:3000 to check out a Grafana dashboard already setup at startup.
