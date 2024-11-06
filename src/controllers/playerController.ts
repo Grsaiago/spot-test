@@ -103,22 +103,24 @@ export class PlayerController {
 				eq(PlayerModel.id, req.params.playerId),
 				isNull(PlayerModel.deletedAt)
 			)).limit(1);
-			if (playerQuery.length) {
+			if (playerQuery.length === 0) {
 				res.status(StatusCodes.NOT_FOUND)
 					.json({
 						message: ReasonPhrases.NOT_FOUND
 					});
+				return;
 			}
 
 			const abilitiesQuery: PlayerAbilitySelectModel[] = await db.select().from(PlayerAbilityModel).where(and(
 				eq(PlayerAbilityModel.referencePlayer, req.params.playerId),
 				isNull(PlayerAbilityModel.deletedAt)
 			)).orderBy(PlayerAbilityModel.createdAt).limit(1)
-			if (abilitiesQuery.length) {
+			if (abilitiesQuery.length === 0) {
 				res.status(StatusCodes.NOT_FOUND)
 					.json({
 						message: ReasonPhrases.NOT_FOUND
 					});
+				return;
 			}
 
 			const foundPlayer: PlayerWithAbilitiy = {
@@ -134,12 +136,14 @@ export class PlayerController {
 			};
 
 			res.json(foundPlayer);
+			return;
 		}
 		catch (err) {
 			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
 				.json({
 					message: ReasonPhrases.INTERNAL_SERVER_ERROR
 				});
+			return;
 		}
 	}
 
@@ -162,15 +166,18 @@ export class PlayerController {
 					.json({
 						message: ReasonPhrases.NOT_FOUND
 					});
+				return;
 			}
 
 			res.json(players);
+			return;
 		}
 		catch (err) {
 			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
 				.json({
 					message: ReasonPhrases.INTERNAL_SERVER_ERROR
 				});
+			return;
 		}
 	}
 
@@ -193,6 +200,7 @@ export class PlayerController {
 					.json({
 						message: ReasonPhrases.NOT_FOUND
 					});
+				return;
 			}
 
 			res.json(players);
@@ -202,6 +210,7 @@ export class PlayerController {
 				.json({
 					message: ReasonPhrases.INTERNAL_SERVER_ERROR
 				});
+			return;
 		}
 	}
 
@@ -221,14 +230,17 @@ export class PlayerController {
 					.json({
 						message: ReasonPhrases.NOT_FOUND
 					});
+				return;
 			}
 
 			res.json(stats);
+			return;
 		} catch (err) {
 			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
 				.json({
 					message: ReasonPhrases.INTERNAL_SERVER_ERROR
 				});
+			return;
 		}
 	}
 }
